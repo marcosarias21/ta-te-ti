@@ -1,34 +1,29 @@
-/* eslint-disable react/react-in-jsx-scope */
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Board } from './components/Board'
+import { Square } from './components/Square'
+import { Navbar } from './components/Navbar'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
 
   return (
     <>
+    <Navbar />
+    <section className='w-[100%] mt-40 flex flex-col justify-center items-center'>
       <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1 className='text-2xl text-rose-500 tracking-wider'>TaTeTi</h1>
       </div>
-      <h1 className='text-red-500'>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div >
+        <Board>
+          {Array(9).fill('a').map((square, index) => <Square index={index} />)}
+        </Board>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div className='mt-2'>
+        <p className='text-center mb-2'>Turnos:</p>
+        <div className='flex gap-8'>
+          <Square />
+          <Square />
+        </div>
+      </div>
+    </section>
     </>
   )
 }

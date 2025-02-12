@@ -2,6 +2,7 @@ import { Board } from './components/Board'
 import { Square } from './components/Square'
 import { Navbar } from './components/Navbar'
 import { useState } from 'react'
+import { Modal } from './components/Modal'
 
 const TURNS = {
   x: 'X',
@@ -22,7 +23,8 @@ const WINNER_COMBOS = [
 const App = () => {
   const [turn, setTurn] = useState<string>(TURNS.x);
   const [board, setBoard] = useState<string[]>(Array(9).fill(null))
-  const [winner, setWinner] = useState<string | null>()
+  const [winner, setWinner] = useState<string>('')
+  const [openModal, setOpenModal] = useState<boolean>(false)
   
   const handleTurn = () => {
    if (turn === TURNS.x) {
@@ -41,22 +43,32 @@ const App = () => {
     }
   }
 
+  const checkTie = (boardToCheck: string[]) : boolean => {
+    return (boardToCheck.every(square => square !== null))
+  }
+
   const updateBoard = (index: number) => {
     if (board[index] || winner) return
     const newBoard = [...board]
     newBoard[index] = turn
     setBoard(newBoard)
     const newWinner = checkWinner(newBoard)
+    const isTie = checkTie(newBoard)
     handleTurn()
     if (newWinner) {
       setWinner(newWinner)
+      setOpenModal(true)
+    } else if (isTie == true) {
+      setWinner('Empate')
+      setOpenModal(true)
     }
   }
 
   const resetGame = () => {
     setBoard(Array(9).fill(null))
     setTurn(TURNS.x)
-    setWinner(null)
+    setWinner('')
+    setOpenModal(false)
   }
 
   return (
@@ -79,8 +91,12 @@ const App = () => {
         </div>
       </div>
       <div className='mt-10'>
-        <button onClick={resetGame} className="rounded-md py-6 px-6 flex items-center text-center border-1 border-white text-white text-md transition-all hover:bg-slate-100 hover:text-gray-950">Reset Game</button>
+        <button onClick={resetGame} className="rounded-md py-6 px-6 flex items-center text-center border-1 border-white text-white text-md transition-all hover:bg-slate-100 hover:text-gray-950">&#10227;
+        Volver a empezar</button>
       </div>
+      {
+        openModal ? <Modal setOpenModal={setOpenModal} winner={winner} resetGame={resetGame}/> : null
+      }
     </section>
     </>
   )
